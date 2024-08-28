@@ -18,15 +18,10 @@
 }
 
 .login-grid{
-  width: 40vh;
+  width: 100vh;
 }
 
 .login-menu{
   background-color: black;
 }
 
-.login-button
-{
-  color: #000000;
-  background-color: #CEBFB2;
-}

@@ -1,10 +1,14 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthenticationService} from "../../service/authentication.service";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {CommonModule, UpperCasePipe} from "@angular/common";;
 
 
 @Component({
   selector: 'newapp-login',
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, UpperCasePipe, CommonModule],
   templateUrl: './newlogin.component.html',
   styleUrls: ['./newlogin.component.css']
 })

@@ -1,29 +1,23 @@
-<ng-container *transloco="let t">
 <div>
-  <img class="logo" src="assets/dwvz_text2.png" alt="De Wachtverzachter" loading="lazy">
   <div class="d-flex flex-column align-items-center justify-content-center login-overlay">
-    <h1>Het narrowcastingsysteem</h1>
-    <h1> dat je begrijpt</h1>
     <div class="login-grid">
-      <div class="alert alert-danger w-100" role="alert" *ngIf="invalidLogin"> {{ t("Credentials are incorrect")}}</div>
+      <div class="alert alert-danger w-100" role="alert" *ngIf="invalidLogin">Credentials are incorrect</div>
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">{{ t('Login') | uppercase}}</h5>
-          <div class="mb-4">
-            <div class="mb-3">
+          <h5 class="card-title">Login</h5>
+          <div class="mb-8">
+            <div class="mb-1">
               <input type="text" id="username" placeholder="Email" class="form-control" [(ngModel)]="username">
             </div>
-            <div class="mb-3">
-              <input type="password" id="password" placeholder="{{ t('Password')}}" class="form-control" [(ngModel)]="password">
+            <div class="mb-4">
+              <input type="password" id="password" placeholder="Password" class="form-control" [(ngModel)]="password">
             </div>
           </div>
-          <a href="/forgot-password" class="btn btn-link shadow w-100 mb-2" data-mdb-ripple-init data-mdb-ripple-color="dark">{{ t('Forgot password')}}</a>
-          <button type="button" class="btn login-button w-100" data-mdb-ripple-init (click)="checkLogin()" (window:keyup.enter)="checkLogin()">
-            <span>{{ t('Sign in')}}</span>
+          <button type="button" class="btn btn-dark" data-mdb-ripple-init (click)="checkLogin()" (window:keyup.enter)="checkLogin()">
+            <span>Sign in</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-</ng-container>
