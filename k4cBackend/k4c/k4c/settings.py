@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'k4c',
-    'rest_framework'
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
