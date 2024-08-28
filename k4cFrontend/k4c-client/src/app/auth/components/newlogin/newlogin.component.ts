@@ -29,14 +29,9 @@ export class NewloginComponent implements OnInit {
   }
 
   checkLogin() {
-
     (this.loginservice.authenticate(this.username, this.password, false).subscribe(
         (data: any) => {
-          if (!data.mfaChallenge) {
-            this.router.navigate(['/mfa/auth']);
-          } else {
             this.router.navigate(['/dashboard']);
-          }
           this.invalidLogin = false
         },
         (error: any) => {
