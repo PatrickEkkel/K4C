@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
-import {BasicAuthHtppInterceptorService} from "./auth/service/basic-auth-interceptor.service";
+import {HTTP_INTERCEPTORS, HttpClient} from "@angular/common/http";
 import {UpperCasePipe} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {BasicAuthHtppInterceptorService} from "./auth/service/basic-auth-interceptor.service";
 
 @NgModule({
 

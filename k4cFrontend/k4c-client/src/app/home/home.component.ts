@@ -2,18 +2,20 @@
 import {User} from "../auth/models";
 import {UserService} from "../auth/service/user.service";
 import {AuthenticationService} from "../auth/service/authentication.service";
+import {TestService} from "../test/test-service";
 
 
 
 @Component({
   templateUrl: 'home.component.html',
-  standalone: true,})
+  standalone: true,
+})
 export class HomeComponent implements OnInit {
     users: User[] = [];
 
     token: string = "";
 
-    constructor(private userService: UserService, private authService: AuthenticationService) { }
+    constructor(private userService: UserService, private authService: AuthenticationService, private testService: TestService) { }
 
     ngOnInit() {
         // this.userService.getAll().pipe(first()).subscribe(users => {
@@ -21,6 +23,10 @@ export class HomeComponent implements OnInit {
         // });
       console.log(this.authService.currentUserValue);
       this.token = this.authService.currentUserValue.token!!;
+
+      this.testService.getData().subscribe(x => {
+        console.log(x);
+      });
     }
 
     getToken() {

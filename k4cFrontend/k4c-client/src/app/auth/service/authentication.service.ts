@@ -13,20 +13,15 @@ export class AuthenticationService {
 
     constructor(private http: HttpClient) {
 
-    //  let currentUser = localStorage.getItem('currentUser');
-    //  if(currentUser != null) {
-    //    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser));
-    //  }
+      let currentUser = sessionStorage.getItem('currentUser');
+      if(currentUser != null) {this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser));
+     }
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
     public get currentUserValue(): User {
-      try {
-        let currentUser = localStorage.getItem('currentUser');
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser!!));
-      } catch (error) {
-        // ignore.. ;-)
-      }
+        //let currentUser = sessionStorage.getItem('currentUser');
+        //this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser!!));
         return this.currentUserSubject.value;
     }
 
@@ -41,7 +36,7 @@ export class AuthenticationService {
                         currentUser = jwtDecode(response.access)
                         currentUser.token = response.access
                         currentUser.refreshToken = response.refresh
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                         this.currentUserSubject.next(currentUser);
                     }
                     return currentUser;
@@ -66,7 +61,7 @@ export class AuthenticationService {
                         currentUser = jwtDecode(response.access)
                         currentUser.token = response.access
                         currentUser.refreshToken = response.refresh
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
                         console.log(currentUser)
                         this.currentUserSubject.next(currentUser);
                     }
@@ -79,10 +74,11 @@ export class AuthenticationService {
     logout() {
         // remove user from local storage to log user out
        try {
-         localStorage.removeItem('currentUser');
+
        }  catch (error) {
          // ignore ;-)
        }
+       sessionStorage.removeItem('currentUser');
         this.currentUserSubject.next(null!!);
     }
 }
