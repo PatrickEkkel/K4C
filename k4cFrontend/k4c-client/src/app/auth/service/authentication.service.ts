@@ -21,6 +21,12 @@ export class AuthenticationService {
     }
 
     public get currentUserValue(): User {
+      try {
+        let currentUser = localStorage.getItem('currentUser');
+        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser!!));
+      } catch (error) {
+        // ignore.. ;-)
+      }
         return this.currentUserSubject.value;
     }
 
@@ -72,7 +78,11 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        //localStorage.removeItem('currentUser');
+       try {
+         localStorage.removeItem('currentUser');
+       }  catch (error) {
+         // ignore ;-)
+       }
         this.currentUserSubject.next(null!!);
     }
 }
