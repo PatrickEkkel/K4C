@@ -1,88 +1,78 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
-import {UserDetails} from "../models/userdetails";
+﻿import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import {jwtDecode} from "jwt-decode";
+import {User} from "../models";
 import {environment} from "../../../environments/environment";
 
-
-export class User {
-
-  userDetails: UserDetails = new UserDetails();
-
-  constructor(public status: string) {}
-}
-
-@Injectable({
-  providedIn: "root"
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+    private currentUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
+    public currentUser: Observable<User>;
 
-  baseUrl: string = environment.apiUrl
+    constructor(private http: HttpClient) {
 
-  constructor(private httpClient: HttpClient) {}
-// Provide username and password for authentication, and once authentication is successful,
-//store JWT token in session
-  authenticate(username: any, password: any, rememberMe: boolean) {
-
-    if(rememberMe) {
-      localStorage.setItem("rememberUser",username);
-      localStorage.setItem("rememberMe",'true');
+    //  let currentUser = localStorage.getItem('currentUser');
+    //  if(currentUser != null) {
+    //    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUser));
+    //  }
+        this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    return this.httpClient
-      .post<any>(this.baseUrl + "authenticate", { username, password })
-      .pipe(
-        map(userData => {
-          sessionStorage.setItem("mfaChallenge",userData.mfaChallenge);
-          sessionStorage.setItem("username", username);
-          let tokenStr = "Bearer " + userData.token;
-          sessionStorage.setItem("token", tokenStr);
-          sessionStorage.setItem("image",userData.image)
-          sessionStorage.setItem("gravatar",userData.gravatar)
-          sessionStorage.setItem("displayName",userData.name)
-          return userData;
-        })
-      )
-  }
+    public get currentUserValue(): User {
+        return this.currentUserSubject.value;
+    }
 
-  verify(token: string) {
-    let url = this.baseUrl + 'api/auth/verify';
-    return this.httpClient.post(url, token);
-  }
-  getRememberedUsername(): String | null {
-    return localStorage.getItem("rememberUser");
-  }
+    login(username: string, password: string) {
+        return this.http.post<any>(`${environment.apiUrl}/${environment.jwtLogin}`, { username, password })
+            .pipe(
+                map(response => {
+                    // login successful if there's a jwt token in the response
+                    let currentUser: User = new User();
+                    if (response.access) {
+                        // store user details and jwt token in local storage to keep user logged in between page refreshes
+                        currentUser = jwtDecode(response.access)
+                        currentUser.token = response.access
+                        currentUser.refreshToken = response.refresh
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        this.currentUserSubject.next(currentUser);
+                    }
+                    return currentUser;
+                }),
+            )
+            // .subscribe( data => console.log('data'), error => console.log('error'))
+    }
 
-  isUserRemembered() {
-    return localStorage.getItem('rememberMe') == 'true';
-  }
-  clearRememberUser() {
-    localStorage.removeItem("remember");
-    localStorage.removeItem("rememberMe");
-  }
+    refreshToken() {
+        console.log('this.currentUserValue.refreshToken')
+        console.log(this.currentUserValue.refreshToken)
+        const refreshToken = this.currentUserValue.refreshToken
+        return this.http.post<any>(`${environment.apiUrl}/${environment.jwtRefresh}`, { 'refresh': refreshToken })
+            .pipe(
+                map(response => {
+                    // login successful if there's a jwt token in the response
+                    console.log('refresh')
+                    console.log(response)
+                    let currentUser: User = new User();
+                    if (response.access) {
+                        // store user details and jwt token in local storage to keep user logged in between page refreshes
+                        currentUser = jwtDecode(response.access)
+                        currentUser.token = response.access
+                        currentUser.refreshToken = response.refresh
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        console.log(currentUser)
+                        this.currentUserSubject.next(currentUser);
+                    }
+                    return currentUser;
+                }),
+            )
+            // .subscribe( data => console.log('data'), error => console.warn(error))
+    }
 
-  getDisplayName() {
-    return sessionStorage.getItem("displayName");
-  }
-  getImage() {
-    return sessionStorage.getItem("image");
-  }
-  usesGravatar(): Boolean | false {
-    return (sessionStorage.getItem("gravatar") == 'true');
-  }
-
-  isUserLoggedIn() {
-    let user = sessionStorage.getItem("username");
-    let mfaChallenge = sessionStorage.getItem("mfaChallenge");
-    return !(user === null) && mfaChallenge !== 'false';
-  }
-
-  resetUserLogin() {
-    sessionStorage.removeItem("username")
-  }
-
-  logOut() {
-    let url = '/api/auth/logout';
-    return this.httpClient.get(url);
-  }
+    logout() {
+        // remove user from local storage to log user out
+        //localStorage.removeItem('currentUser');
+        this.currentUserSubject.next(null!!);
+    }
 }
