@@ -12,8 +12,14 @@ COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
 # Copy the project code into the container
-COPY . /app/
+COPY manage.py /app/
+COPY start_k4c.sh /app/
+COPY db.sqlite3 /app
+RUN mkdir /app/k4c
 RUN chmod 700 /app/start_k4c.sh
+
+#ADD ./build.zip /app/
+#RUN unzip /app/build.zip
 # command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
 ENTRYPOINT ["/app/start_k4c.sh"]
 #ENTRYPOINT ["tail"]
