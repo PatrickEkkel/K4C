@@ -1,7 +1,4 @@
-import logging
 import os
-import queue
-import subprocess
 import threading
 import time
 from watchdog.observers import Observer
@@ -20,12 +17,15 @@ def podman_worker(name):
             build_in_progress = True
             event_queue.clear()
             run_podman_build()
+            # backoff for 3 seconds
+            time.sleep(3)
             build_in_progress = False
 
+def build_base_image():
+    os.system('podman build -f Containerfile_K4CBase -t k4c_python_base')
 
 def run_podman_build():
-    os.system("zip -r build.zip k4c/")
-    os.system('podman build -f Containerfile')
+    os.system('podman build -f Containerfile -t k4c_backend')
     print("backend build completed successfully!")
 
 
@@ -52,7 +52,7 @@ def on_moved(event):
 if __name__ == "__main__":
     patterns = ["*"]
     # TODO: read_from git ignore maybe
-    ignore_patterns = [".idea", "*.zip"]
+    ignore_patterns = [".idea", "*.zip,**/__pycache__/*.pyc"]
     my_event_handler = PatternMatchingEventHandler(patterns=["*"],
                                                    ignore_patterns=ignore_patterns,
                                                    ignore_directories=False,
@@ -67,6 +67,8 @@ if __name__ == "__main__":
     x.start()
     my_observer = Observer()
     my_observer.schedule(my_event_handler, path, recursive=go_recursively)
+    print('Building base container')
+    build_base_image()
     print('watching for file changes...')
     my_observer.start()
     try:
