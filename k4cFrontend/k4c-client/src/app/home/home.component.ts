@@ -3,7 +3,7 @@ import {User} from "../auth/models";
 import {UserService} from "../auth/service/user.service";
 import {AuthenticationService} from "../auth/service/authentication.service";
 import {TestService} from "../test/test-service";
-import {MenuComponent} from "../common/menu/menu.component";
+import {AppframeComponent} from "../common/menu/appframe.component";
 
 
 
@@ -11,7 +11,7 @@ import {MenuComponent} from "../common/menu/menu.component";
   templateUrl: 'home.component.html',
   standalone: true,
   imports: [
-    MenuComponent
+    AppframeComponent
   ]
 })
 export class HomeComponent implements OnInit {

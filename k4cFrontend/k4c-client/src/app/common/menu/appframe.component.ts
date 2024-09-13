@@ -1,16 +1,18 @@
 import {Component} from "@angular/core";
 import {MenuItemComponent} from "./menu-item.component";
 import {DropdownMenuItemComponent} from "./dropdown-menu-item.component";
+import {TestComponent} from "../../home/test.component";
 
 @Component({
-  templateUrl: 'menu.component.html',
+  templateUrl: 'appframe.component.html',
   standalone: true,
-  selector: 'side-menu',
+  selector: 'appframe',
   imports: [
     MenuItemComponent,
-    DropdownMenuItemComponent
+    DropdownMenuItemComponent,
+    TestComponent
   ]
 })
-export class MenuComponent  {
+export class AppframeComponent {
 
 }
