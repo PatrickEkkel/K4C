@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 
 @Component({
   templateUrl: 'dropdown-menu-item.component.html',
@@ -6,5 +6,8 @@ import {Component} from "@angular/core";
   selector: 'dropdown-menu-item',
 })
 export class DropdownMenuItemComponent {
+
+  @Input() text: string = '';
+  @Input() icon: string = '';
 
 }

@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, Input} from "@angular/core";
 
 @Component({
   templateUrl: 'menu-item.component.html',
@@ -6,5 +6,6 @@ import {Component} from "@angular/core";
   selector: 'menu-item',
 })
 export class MenuItemComponent {
-
+  @Input() text: string = '';
+  @Input() icon: string = '';
 }
