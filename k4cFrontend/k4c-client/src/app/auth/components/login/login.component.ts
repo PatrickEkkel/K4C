@@ -9,6 +9,7 @@ import {CommonModule, NgClass} from "@angular/common";
 @Component({
   templateUrl: 'login.component.html',
   standalone: true,
+  selector: 'side-menu',
   imports: [
     ReactiveFormsModule,
     NgClass,
