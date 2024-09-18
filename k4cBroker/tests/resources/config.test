@@ -1,0 +1,4 @@
+[DEFAULT]
+PublishPort = 5030
+ConsumerStartPort = 5001
+ConsumerEndPort = 5010
